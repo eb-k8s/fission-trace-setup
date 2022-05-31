@@ -1,0 +1,31 @@
+apiVersion: opentelemetry.io/v1alpha1
+kind: OpenTelemetryCollector
+metadata:
+  name: fission-otel-collector
+spec:
+  mode: deployment # This configuration is omittable.
+  config: |
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: "0.0.0.0:4317"
+          http:
+    processors:
+      batch:
+        timeout: 10s
+    extensions:
+      health_check: {}
+      zpages: {}
+    exporters:
+        jaeger:
+          endpoint: "fission-trace-collector.observability.svc:14250"
+          tls:
+            insecure: true
+    service:
+      extensions: [health_check, zpages]
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [jaeger]

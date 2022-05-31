@@ -1,0 +1,28 @@
+apiVersion: jaegertracing.io/v1
+kind: Jaeger
+metadata:
+  name: fission-trace
+  namespace: observability
+spec:
+  strategy: production
+  storage:
+    type: elasticsearch
+    options:
+      es:
+        server-urls: https://jaeger-data-es-http.observability.svc:9200/
+        index-prefix: fission
+        tls:
+          ca: /es/certificates/ca.crt
+    secretName: jaeger-secret
+  query:
+    serviceType: NodePort
+  volumeMounts:
+    - mountPath: /es/certificates/
+      name: certificates
+      readOnly: true
+  volumes:
+    - name: certificates
+      secret:
+        secretName: jaeger-data-es-http-certs-public
+
+# kubectl create secret generic jaeger-secret --from-literal=ES_PASSWORD=ES_PASSWORD --from-literal=ES_USERNAME=elastic
