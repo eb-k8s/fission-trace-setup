@@ -4,7 +4,7 @@ openTelemetry:
   ## otlpCollectorEndpoint: "otel-collector.observability.svc:4317"
   ##
   ## otlpCollectorEndpoint: "fission-trace-collector.observability.svc:4317"
-  otlpCollectorEndpoint:
+  otlpCollectorEndpoint: http://fission-collector-collector.observability.svc:4317
   ## Set this flag to false if you are using secure endpoint for the collector.
   ##
   otlpInsecure: true
